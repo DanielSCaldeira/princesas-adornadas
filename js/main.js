@@ -609,6 +609,7 @@ function montarMenuMobile() {
     btn.setAttribute("aria-expanded", aberto ? "true" : "false");
     btn.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
     btn.textContent = aberto ? "✕" : "☰";
+    document.getElementById("topbar")?.classList.toggle("menu-aberto", aberto);
   };
   btn.addEventListener("click", () => { nav.classList.toggle("aberto"); sync(); });
   nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { nav.classList.remove("aberto"); sync(); }));
