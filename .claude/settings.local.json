@@ -4,7 +4,8 @@
       "Bash(gh auth *)",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(rtk git *)"
+      "Bash(rtk git *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

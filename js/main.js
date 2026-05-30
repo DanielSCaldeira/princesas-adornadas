@@ -414,6 +414,22 @@ function montarInscricao() {
 }
 
 /* ---------- Programação ---------- */
+// O Apps Script devolve células de horário do Sheets como Date com época
+// 30/12/1899 (ex.: "Sat Dec 30 1899 08:30:00 GMT-0300"). Aqui extraímos só "HH:mm".
+function formatarHorario(v) {
+  if (v == null) return "";
+  const s = String(v).trim();
+  if (!s) return "";
+  if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(s)) return s.slice(0, 5);
+  const m = s.match(/\b(\d{2}):(\d{2})(?::\d{2})?\b/);
+  if (m) return m[1] + ":" + m[2];
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) {
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  }
+  return s;
+}
+
 async function carregarProgramacao() {
   const box = document.getElementById("programacao-lista");
   if (!box) return;
@@ -428,7 +444,7 @@ async function carregarProgramacao() {
         <ul class="prog-ul">
           ${lista.map(i => `
             <li class="prog-item">
-              <span class="prog-hora">${i.horario || ""}</span>
+              <span class="prog-hora">${formatarHorario(i.horario)}</span>
               <div class="prog-info">
                 <strong>${i.atividade || ""}</strong>
                 ${i.descricao ? `<p>${i.descricao}</p>` : ""}
@@ -442,15 +458,16 @@ async function carregarProgramacao() {
   }
 }
 
-/* ---------- Depoimentos ---------- */
+/* ---------- Depoimentos (carrossel com múltiplos visíveis) ---------- */
 async function carregarDepoimentos() {
   const box = document.getElementById("depoimentos-lista");
   if (!box) return;
   try {
     const itens = await Sheets.getDepoimentos();
     if (!itens.length) { box.innerHTML = "<p class='vazio'>Em breve, testemunhos.</p>"; return; }
-    box.innerHTML = itens.map(d => `
-      <figure class="dep-card">
+
+    const cardsHtml = itens.map(d => `
+      <figure class="dep-card" role="group" aria-roledescription="slide">
         <div class="dep-aspas">”</div>
         <div class="dep-estrelas" aria-label="Avaliação 5 de 5 estrelas">★★★★★</div>
         <blockquote>${d.texto || ""}</blockquote>
@@ -459,10 +476,127 @@ async function carregarDepoimentos() {
           ${d.cidade ? `<span>${d.cidade}</span>` : ""}
         </figcaption>
       </figure>`).join("");
+
+    box.innerHTML = `
+      <div class="dep-carrossel" id="depCarrossel" aria-roledescription="carrossel" aria-label="Depoimentos de participantes">
+        <button class="dep-btn dep-prev" type="button" aria-label="Depoimentos anteriores">‹</button>
+        <div class="dep-viewport">
+          <div class="dep-trilho" aria-live="polite">${cardsHtml}</div>
+        </div>
+        <button class="dep-btn dep-next" type="button" aria-label="Próximos depoimentos">›</button>
+        <div class="dep-dots" role="tablist" aria-label="Selecionar grupo de depoimentos"></div>
+      </div>`;
+
+    iniciarCarrosselDepoimentos(box, itens.length);
   } catch (e) {
     console.warn(e);
     box.innerHTML = "<p class='vazio'>Não foi possível carregar os depoimentos.</p>";
   }
+}
+
+function iniciarCarrosselDepoimentos(box, total) {
+  const root = box.querySelector("#depCarrossel");
+  if (!root) return;
+  const trilho = root.querySelector(".dep-trilho");
+  const dotsBox = root.querySelector(".dep-dots");
+  const btnPrev = root.querySelector(".dep-prev");
+  const btnNext = root.querySelector(".dep-next");
+  let atual = 0;
+  let timer = null;
+  let visiveis = 3;
+  let paginas = 1;
+
+  const reduzirMov = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const intervalo = 7000;
+
+  function calcularVisiveis() {
+    const w = window.innerWidth;
+    if (w <= 640) return 1;
+    if (w <= 980) return 2;
+    return 3;
+  }
+
+  function montarDots() {
+    dotsBox.innerHTML = "";
+    if (paginas <= 1) { dotsBox.style.display = "none"; return; }
+    dotsBox.style.display = "";
+    for (let i = 0; i < paginas; i++) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "dep-dot" + (i === 0 ? " ativo" : "");
+      b.setAttribute("aria-label", "Ir para a página " + (i + 1));
+      b.addEventListener("click", () => { mostrar(i); reiniciar(); });
+      dotsBox.appendChild(b);
+    }
+  }
+
+  function aplicarLayout() {
+    visiveis = calcularVisiveis();
+    paginas = Math.max(1, Math.ceil(total / visiveis));
+    trilho.style.gridTemplateColumns = `repeat(${total}, calc((100% - ${(visiveis - 1) * 18}px) / ${visiveis}))`;
+    if (atual >= paginas) atual = paginas - 1;
+    montarDots();
+    aplicarTransform();
+    const podeNavegar = paginas > 1;
+    btnPrev.style.display = podeNavegar ? "" : "none";
+    btnNext.style.display = podeNavegar ? "" : "none";
+  }
+
+  function aplicarTransform() {
+    const desloc = atual * 100;
+    trilho.style.transform = `translateX(-${desloc}%)`;
+    [...dotsBox.children].forEach((d, i) => {
+      d.classList.toggle("ativo", i === atual);
+      d.setAttribute("aria-selected", i === atual ? "true" : "false");
+    });
+  }
+
+  function mostrar(n) {
+    atual = (n + paginas) % paginas;
+    aplicarTransform();
+  }
+  const proximo = () => mostrar(atual + 1);
+  const anterior = () => mostrar(atual - 1);
+
+  function reiniciar() {
+    clearInterval(timer);
+    if (reduzirMov || paginas <= 1) return;
+    timer = setInterval(proximo, intervalo);
+  }
+
+  btnNext.addEventListener("click", () => { proximo(); reiniciar(); });
+  btnPrev.addEventListener("click", () => { anterior(); reiniciar(); });
+
+  ["mouseenter", "focusin", "touchstart"].forEach(ev => root.addEventListener(ev, () => clearInterval(timer)));
+  ["mouseleave", "focusout", "touchend"].forEach(ev => root.addEventListener(ev, reiniciar));
+
+  root.setAttribute("tabindex", "0");
+  root.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { proximo(); reiniciar(); }
+    if (e.key === "ArrowLeft") { anterior(); reiniciar(); }
+  });
+
+  let x0 = null;
+  const start = (x) => x0 = x;
+  const end = (x) => {
+    if (x0 === null) return;
+    const dx = x - x0;
+    if (Math.abs(dx) > 40) { dx < 0 ? proximo() : anterior(); reiniciar(); }
+    x0 = null;
+  };
+  trilho.addEventListener("touchstart", e => start(e.touches[0].clientX), { passive: true });
+  trilho.addEventListener("touchend", e => end(e.changedTouches[0].clientX));
+  trilho.addEventListener("mousedown", e => start(e.clientX));
+  trilho.addEventListener("mouseup", e => end(e.clientX));
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(aplicarLayout, 150);
+  });
+
+  aplicarLayout();
+  reiniciar();
 }
 
 /* ---------- Menu mobile ---------- */

@@ -186,7 +186,9 @@ function _lerImagens(folder) {
 function _lerAba(ss, nome) {
   var sh = ss.getSheetByName(nome);
   if (!sh) return [];
-  var vals = sh.getDataRange().getValues();
+  // getDisplayValues() devolve as células já formatadas como aparecem na
+  // planilha (ex.: "08:30") — evita Date.toString() em células de horário.
+  var vals = sh.getDataRange().getDisplayValues();
   if (vals.length < 2) return [];
   var head = vals[0].map(function (h) { return String(h).trim().toLowerCase(); });
   var out = [];

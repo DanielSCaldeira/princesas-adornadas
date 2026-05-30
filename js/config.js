@@ -241,6 +241,28 @@ const CONFIG = {
   },
 
   /* ------------------------------------------------------------------
+     14.1) DEPOIMENTOS
+     Lista local de testemunhos. Se preencher aqui, esta lista será
+     usada no carrossel da seção "Testemunhos" (tem prioridade sobre a
+     planilha do Google Sheets). Deixe a lista vazia [] para usar a
+     planilha normalmente.
+  ------------------------------------------------------------------ */
+  depoimentos: [
+    { nome: "Ana Beatriz",      texto: "Saí transformada. Foi um dia de cura e renovo para a minha alma.",                              cidade: "Brasília/DF" },
+    { nome: "Mariana Costa",    texto: "Senti o amor de Deus de uma forma que não tenho palavras. Voltarei com certeza!",               cidade: "Goiânia/GO" },
+    { nome: "Patrícia Lima",    texto: "Cada detalhe feito com tanto cuidado. Me senti uma princesa adornada.",                          cidade: "Anápolis/GO" },
+    { nome: "Juliana Ferreira", texto: "Cheguei cansada e voltei renovada. Um encontro que marca a alma e fortalece a fé.",              cidade: "São Paulo/SP" },
+    { nome: "Camila Rodrigues", texto: "Foi um divisor de águas na minha caminhada com Cristo. Recomendo a toda mulher!",                cidade: "São Paulo/SP" },
+    { nome: "Letícia Almeida",  texto: "Saí dali certa do amor do Pai por mim. Cada palavra foi um abraço de Deus.",                     cidade: "Belo Horizonte/MG" },
+    { nome: "Renata Oliveira",  texto: "Comunhão linda, louvor poderoso e uma palavra que tocou o mais profundo de mim.",                cidade: "Uberlândia/MG" },
+    { nome: "Fernanda Souza",   texto: "Encontrei irmãs que levarei para a vida. Foi muito mais do que eu esperava.",                    cidade: "Caldas Novas/GO" },
+    { nome: "Bianca Martins",   texto: "A presença de Deus foi tão real! Voltei para casa transbordando gratidão.",                      cidade: "Caldas Novas/GO" },
+    { nome: "Tatiane Ribeiro",  texto: "Cada momento foi preparado com tanto amor. Me senti verdadeiramente filha do Rei.",              cidade: "Caldas Novas/GO" },
+    { nome: "Vanessa Carvalho", texto: "Voltei diferente para a minha família. Deus me restaurou ali, no meio das minhas irmãs.",        cidade: "Campinas/SP" },
+    { nome: "Daniela Santos",   texto: "Que dia abençoado! O louvor, a palavra, a comunhão — tudo me ministrou profundamente.",          cidade: "Contagem/MG" },
+  ],
+
+  /* ------------------------------------------------------------------
      15) IGREJA RESPONSÁVEL (realização do evento)
   ------------------------------------------------------------------ */
   igreja: {
