@@ -22,11 +22,29 @@ abaixo para colocar o **seu** conteúdo real.
 
 Abra `js/config.js` no Bloco de Notas e preencha:
 
+- **seo** → URL final do site, imagem de compartilhamento, palavras-chave
+  (essencial para o Google e para o preview no WhatsApp/Facebook)
 - **evento** → nome, versículo/tema, link do Instagram
 - **proximoEvento** → data do próximo encontro (alimenta a contagem regressiva)
 - **contato** → WhatsApp (formato `5561999998888`), e-mail, **chave PIX**
 
 Salve e abra o `index.html` para ver as mudanças. ✅
+
+### 1.1) SEO — Aparecer no Google
+
+Para ranquear bem no Google, faça **depois** de publicar o site:
+
+1. **Substitua a URL placeholder** em três lugares:
+   - `js/config.js` → campo `seo.siteUrl`
+   - `robots.txt` → linha `Sitemap:`
+   - `sitemap.xml` → as três tags `<loc>…</loc>`
+2. **Adicione a imagem de compartilhamento**: salve uma imagem 1200×630px
+   em `img/og-cover.jpg` (ou ajuste o caminho em `seo.imagemCompartilhamento`).
+   Essa imagem é o que aparece no preview do WhatsApp/Facebook.
+3. **Cadastre o site no Google Search Console**
+   ([search.google.com/search-console](https://search.google.com/search-console)).
+   Cole o código de verificação em `seo.googleSiteVerification` no `config.js`.
+4. **Envie o sitemap** dentro do Search Console: `sitemap.xml`.
 
 ---
 

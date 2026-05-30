@@ -57,6 +57,20 @@ h1, h2, h3 { font-family: var(--fonte-titulo); color: var(--vinho); font-weight:
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   outline: 3px solid var(--magenta); outline-offset: 3px; border-radius: 8px;
 }
+
+/* Skip link (acessibilidade — pular para o conteúdo principal) */
+.pular-conteudo {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  background: var(--vinho);
+  color: #fff;
+  padding: .75rem 1.1rem;
+  border-radius: 0 0 12px 0;
+  font-weight: 700;
+}
+.pular-conteudo:focus { left: 0; outline: 3px solid var(--ouro); }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
@@ -338,7 +352,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   padding: 1.2rem 1.4rem; box-shadow: var(--sombra); font-size: 1.12rem; text-align: left; }
 .passo-num { flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--grad-ouro);
   color: var(--vinho-esc); font-weight: 900; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; font-family: var(--fonte-titulo); }
-#formWrap iframe { width: 100%; min-height: 760px; border: none; border-radius: var(--r-lg); box-shadow: var(--sombra); background: #fff; }
+#formWrap iframe { width: 100%; min-height: 1400px; border: none; border-radius: var(--r-lg); box-shadow: var(--sombra); background: #fff; }
 .form-placeholder { background: var(--branco); border-radius: var(--r-lg); padding: 3rem; box-shadow: var(--sombra); }
 .form-placeholder p { margin-bottom: 1.5rem; font-size: 1.15rem; }
 .insc-alt { text-align: center; margin-top: 2.5rem; background: var(--rosa-claro); border-radius: var(--r-lg); padding: 2.2rem; }
@@ -459,13 +473,16 @@ footer .copy { font-size: .85rem; opacity: .8; margin-top: 1.4rem; }
 .igreja-redes svg { width: 1.5rem; height: 1.5rem; }
 .tt-svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertical-align: middle; }
 
-/* ---------- Botão de inscrição no topo ---------- */
-.btn-topo { display: inline-flex; align-items: center; justify-content: center;
+/* ---------- Botão de inscrição no topo ----------
+   Usa .nav-links a.btn-topo para vencer a especificidade de
+   .nav-links a (que senão sobrescreveria o padding). */
+.nav-links a.btn-topo { display: inline-flex; align-items: center; justify-content: center;
   background: var(--grad-ouro); color: var(--vinho-esc) !important; font-family: var(--fonte-titulo);
-  font-weight: 800; font-size: 1rem; line-height: 1; padding: .85rem 1.8rem; border-radius: 999px;
+  font-weight: 800; font-size: 1rem; line-height: 1; padding: 1rem 2.8rem; border-radius: 999px;
+  margin-left: 1.4rem;
   box-shadow: 0 8px 20px rgba(245,179,1,.4); transition: transform .25s, box-shadow .25s; }
-.btn-topo::after { content: none !important; }
-.btn-topo:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(245,179,1,.55); }
+.nav-links a.btn-topo::after { content: none !important; }
+.nav-links a.btn-topo:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(245,179,1,.55); }
 
 /* ---------- Estrelas de avaliação ---------- */
 .dep-estrelas { color: var(--ouro); letter-spacing: 3px; font-size: 1.15rem; margin-bottom: .5rem; }
@@ -521,7 +538,7 @@ footer .copy { font-size: .85rem; opacity: .8; margin-top: 1.4rem; }
   #sticky-cta { display: flex; }
   body { padding-bottom: 76px; }
   #whatsFloat { bottom: 88px; }
-  .btn-topo { align-self: center; }
+  .nav-links a.btn-topo { align-self: center; margin-left: 0; }
 }
 
 @media (max-width: 520px) {

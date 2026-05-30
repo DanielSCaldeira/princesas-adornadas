@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /apps-script/
+
+# Substitua pela URL final do seu site:
+Sitemap: https://princesasadornadas.com.br/sitemap.xml

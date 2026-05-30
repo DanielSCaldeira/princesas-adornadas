@@ -10,6 +10,32 @@
 const CONFIG = {
 
   /* ------------------------------------------------------------------
+     0) SEO — Aparecer melhor no Google e nas redes sociais
+     ⚠️ Substitua "siteUrl" pelo endereço final do site (sem barra no fim).
+     A imagem "imagemCompartilhamento" deve ter 1200x630px para ficar
+     bonita no WhatsApp / Facebook / Instagram (link preview).
+  ------------------------------------------------------------------ */
+  seo: {
+    // Ex.: "https://princesasadornadas.com.br"  ou  "https://seu-usuario.github.io/princesas-adornadas"
+    siteUrl: "https://princesasadornadas.com.br",
+    // Caminho da imagem de compartilhamento (1200x630). Deixe vazio para
+    // o site não enviar imagem nas previews.
+    imagemCompartilhamento: "img/og-cover.jpg",
+    // Palavras-chave (separe por vírgula). Pense no que sua público busca:
+    palavrasChave: "encontro de mulheres cristãs, retiro feminino evangélico, conferência feminina cristã, Princesas Adornadas, evento cristão para mulheres, Caldas Novas, Goiás, mulheres de fé, comunhão cristã",
+    // Identidade local — ajuda no SEO de pesquisas regionais.
+    localidade: {
+      cidade: "Caldas Novas",
+      estado: "GO",
+      pais: "BR",
+    },
+    // Cor da barra do navegador no celular (combine com a marca).
+    corTema: "#c81e6e",
+    // Identificador do Google Search Console (opcional). Deixe vazio se não tiver.
+    googleSiteVerification: "",
+  },
+
+  /* ------------------------------------------------------------------
      1) IDENTIDADE DO EVENTO
   ------------------------------------------------------------------ */
   evento: {
@@ -91,6 +117,9 @@ const CONFIG = {
   inscricao: {
     googleFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScWGGLS4fuOxoh8GY0dJpTh6UKc_AXIKxrDnHocJwvKnwD1pQ/viewform",
     incorporar: true,
+    // Altura do formulário incorporado, em pixels. Aumente se aparecer
+    // rolagem interna; diminua se sobrar muito espaço em branco no fim.
+    alturaIframe: 1400,
   },
 
   /* ------------------------------------------------------------------
