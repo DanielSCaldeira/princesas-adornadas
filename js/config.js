@@ -45,9 +45,106 @@ const CONFIG = {
     versiculo: "“Toda formosa és, amiga minha, e em ti não há mancha.”",
     versiculoRef: "Cantares 4:7",
     tema: "Adornadas pela Graça",
+    selo: "Encontro de Mulheres Cristãs",  // selo pequeno no topo do hero
     instagram: "https://www.instagram.com/princesas.adornadas/",
     instagramUser: "princesas.adornadas",
     facebook: "https://www.facebook.com/alinhadasnapalavra",
+  },
+
+  /* ------------------------------------------------------------------
+     1.0) TEXTOS DAS SEÇÕES (títulos e subtítulos das seções da home)
+     Deixe vazio "" para ocultar.
+  ------------------------------------------------------------------ */
+  secoes: {
+    carrossel:  { titulo: "Momentos Especiais",  subtitulo: "Um pouquinho do que já vivemos juntas" },
+    sobre:      { titulo: "Sobre o Encontro",    subtitulo: "Mais que um evento, um encontro com o Rei" },
+    idealizadora: { titulo: "Quem está à frente", subtitulo: "A idealizadora do encontro" },
+    programacao:{ titulo: "Programação",         subtitulo: "Um dia inteiro preparado com carinho" },
+    depoimentos:{ titulo: "Testemunhos",         subtitulo: "O que dizem nossas princesas" },
+    ctaInscricao: {
+      titulo: "Venha viver esse dia com a gente",
+      // Se vazio, usa CONFIG.gatilhos.chamadaFinal como fallback.
+      texto: "",
+      botao: "Fazer minha inscrição",
+    },
+    ofertas:    { titulo: "Contribua com a Obra", subtitulo: "Sua oferta abençoa este ministério",
+                  texto: "Você pode contribuir via PIX:", botao: "Copiar chave PIX" },
+    contato:    { titulo: "Fale Conosco",         subtitulo: "Estamos aqui para te receber" },
+    realizacao: { eyebrow: "Realização" },
+  },
+
+  /* ------------------------------------------------------------------
+     1.0.1) HERO (capa / topo)
+  ------------------------------------------------------------------ */
+  hero: {
+    // Imagem de fundo do hero (URL absoluta ou caminho local).
+    imagemFundo: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1600&q=80",
+    botaoPrincipal: "Quero garantir minha vaga",
+    botaoSecundario: "Ver fotos",
+  },
+
+  /* ------------------------------------------------------------------
+     1.0.2) SEÇÃO "SOBRE" (texto + imagem + pilares)
+     "paragrafos" aceita HTML simples (ex.: <strong>...</strong>).
+  ------------------------------------------------------------------ */
+  sobre: {
+    imagem: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=900&q=80",
+    imagemAlt: "Mulheres cristãs em comunhão e oração no encontro Princesas Adornadas",
+    paragrafos: [
+      "<strong>Princesas Adornadas</strong> nasceu do desejo de reunir mulheres para celebrar a identidade que temos em Cristo: filhas amadas, escolhidas e cuidadas pelo Pai.",
+      "Em cada edição preparamos um ambiente de cuidado, beleza e profundidade espiritual — com louvor, palavra, oficinas e muita comunhão. É um dia para descansar, ser ministrada e lembrar do seu valor.",
+      "Seja você uma jovem, mãe, esposa ou líder: há um lugar reservado para você à mesa do Rei. 👑",
+    ],
+    pilares: [
+      { icone: "🙏", titulo: "Adoração", texto: "Momentos de louvor para aquietar o coração na presença de Deus." },
+      { icone: "📖", titulo: "Palavra",  texto: "Ensino bíblico que edifica, restaura e fortalece a fé." },
+      { icone: "💐", titulo: "Comunhão", texto: "Amizades que florescem e laços que permanecem." },
+    ],
+  },
+
+  /* ------------------------------------------------------------------
+     1.0.3) MENU DE NAVEGAÇÃO (cabeçalho)
+     "alvo" usa âncoras (#sobre) ou páginas (galeria.html).
+  ------------------------------------------------------------------ */
+  navegacao: {
+    itens: [
+      { texto: "Sobre",       alvo: "#sobre"        },
+      { texto: "Programação", alvo: "#programacao"  },
+      { texto: "Galeria",     alvo: "galeria.html"  },
+      { texto: "Depoimentos", alvo: "#depoimentos"  },
+      { texto: "Contato",     alvo: "#contato"      },
+    ],
+    botaoInscricao: "Inscreva-se",
+  },
+
+  /* ------------------------------------------------------------------
+     1.0.4) PÁGINAS INTERNAS (galeria / inscrição)
+  ------------------------------------------------------------------ */
+  paginas: {
+    galeria: {
+      titulo: "Galeria de Momentos",
+      subtitulo: "Reviva cada edição. Escolha uma sessão ao lado e relembre os momentos especiais. 👑",
+    },
+    inscricao: {
+      titulo: "Faça sua Inscrição",
+      heroSubtitulo: "Garanta sua vaga antes que as inscrições se encerrem",
+      passosTitulo: "Como se inscrever",
+      passos: [
+        "Preencha o formulário abaixo com seus dados.",
+        'Toque em <strong>“Enviar”</strong> ao final.',
+        "Pronto! Entraremos em contato para confirmar. 💛",
+      ],
+      whatsappTitulo: "Prefere se inscrever pelo WhatsApp? É só falar com a gente:",
+      whatsappBotao: "Inscrição pelo WhatsApp",
+      voltar: "← Voltar para a página inicial",
+    },
+  },
+
+  /* ------------------------------------------------------------------
+     1.0.5) RODAPÉ
+  ------------------------------------------------------------------ */
+  rodape: {
+    assinatura: "Feito com 💛 e oração",
   },
 
   /* ------------------------------------------------------------------
@@ -107,6 +204,13 @@ const CONFIG = {
     pixChave: "",
     pixNome: "",
     pixTipo: "", // ex.: "E-mail", "Telefone", "Aleatória"
+    // Cartões do bloco "Fale Conosco" (títulos e legendas dos canais)
+    cards: {
+      whatsapp:  { titulo: "WhatsApp",            legenda: "Fale com a nossa equipe" },
+      instagram: { titulo: "Instagram do evento", legenda: "" /* usa @user automaticamente */ },
+      facebook:  { titulo: "Facebook",            legenda: "Curta nossa página" },
+      email:     { titulo: "E-mail",              legenda: "" },
+    },
   },
 
   /* ------------------------------------------------------------------
@@ -153,6 +257,7 @@ const CONFIG = {
     titulo: "Investimento",
     subtitulo: "Tudo o que você recebe nesse dia especial",
     preco: "R$ 120,00",
+    precoLabel: "Valor do ingresso",
     precoObs: "por pessoa",
     parcelas: "ou em até 3x sem juros",   // deixe "" se não houver
     incluso: [
@@ -176,6 +281,9 @@ const CONFIG = {
     mostrar: true,
     titulo: "Condições de Pagamento",
     subtitulo: "Quanto antes você garante, em mais vezes pode parcelar!",
+    label: "Parcelamento sem juros",
+    formasTitulo: "Formas de pagamento",
+    botaoTexto: "Garantir minha vaga",
     maxParcelas: 10,          // máximo de parcelas sem juros
     semJuros: true,
     // Valor total para o cálculo. Vazio = usa o preço do ingresso (acima).
@@ -193,6 +301,8 @@ const CONFIG = {
     nome: "Lagoa Quente Hotel",        // ex.: "Espaço de Eventos Bella Vista"
     endereco: "Avenida Lagoa Quente, 05 - St. Lagoa Quente, Caldas Novas, Goiás 75.692-580, Brasil",    // ex.: "QNL 10, Taguatinga — Brasília/DF"
     mapsUrl: "https://maps.app.goo.gl/JUBKMqLAwf745k6H7",     // ex.: "https://maps.app.goo.gl/xxxxx"
+    tituloCard: "Onde vai ser",
+    botaoMaps: "Ver no mapa",
   },
 
   /* ------------------------------------------------------------------
@@ -216,6 +326,16 @@ const CONFIG = {
     escassez: "Vagas limitadas",            // selo no topo e no preço
     urgenciaPreco: "Valores promocionais por tempo limitado",
     chamadaFinal: "Não fique de fora — as vagas se esgotam rápido!",
+    // Textos da contagem regressiva (use {dias} onde quiser exibir os dias restantes)
+    contagem: {
+      eHoje: "É hoje! 👑 Te esperamos.",
+      urgenciaHoje: "✨ É hoje! Te esperamos!",
+      urgenciaUltimasHoras: "🔥 É hoje! Últimas horas para se inscrever!",
+      urgenciaFalta1Dia: "🔥 Falta só 1 dia! Garanta sua vaga!",
+      urgenciaFaltamDias: "⏳ Faltam {dias} dias — não deixe para a última hora!",
+    },
+    // Mensagem do WhatsApp ao clicar em "Inscreva-se" sem formulário configurado
+    mensagemInscricaoWhatsapp: "Quero me inscrever no Princesas Adornadas!",
   },
 
   /* ------------------------------------------------------------------
@@ -228,8 +348,12 @@ const CONFIG = {
     mostrar: true,
     total: 200,
     preenchidas: 150,
+    selo: "🔥 Atenção",
     titulo: "Corra, as vagas estão acabando!",
     subtitulo: "Garanta a sua antes que esgote",
+    // Use {preenchidas}, {total}, {restam} para personalizar:
+    infoTemplate: "{preenchidas} de {total} vagas preenchidas — restam apenas {restam}!",
+    botaoTexto: "Quero minha vaga agora",
   },
 
   /* ------------------------------------------------------------------
@@ -297,6 +421,7 @@ const CONFIG = {
   igreja: {
     mostrar: true,
     nome: "Comunidade Vida por Vidas",
+    icone: "⛪",
     descricao: "Igreja responsável pela realização do evento",
     facebook: "https://www.facebook.com/ComunidadeVidaPorVidas",
     instagram: "https://www.instagram.com/comunidadevidaporvidas",

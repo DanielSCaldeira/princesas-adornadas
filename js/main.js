@@ -4,6 +4,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   preencherTextosFixos();
+  montarHero();
+  montarSobre();
+  montarTextosSecoes();
+  montarPaginasInternas();
   montarIdealizadora();
   iniciarContagem();
   montarProvaSocial();
@@ -32,6 +36,7 @@ function preencherTextosFixos() {
   setText("[data-nome-evento]", c.nome);
   setText("[data-subtitulo]", c.subtitulo);
   setText("[data-tema]", c.tema);
+  setText("[data-selo]", c.selo);
   setText("[data-versiculo]", c.versiculo);
   setText("[data-versiculo-ref]", c.versiculoRef);
   document.querySelectorAll("[data-instagram]").forEach(a => a.href = c.instagram);
@@ -53,6 +58,104 @@ function preencherTextosFixos() {
 
 function setText(sel, txt) {
   document.querySelectorAll(sel).forEach(el => { if (txt) el.textContent = txt; });
+}
+
+function setHTML(sel, html) {
+  document.querySelectorAll(sel).forEach(el => { if (html != null) el.innerHTML = html; });
+}
+
+/* ---------- Hero (imagem de fundo + botões) ---------- */
+function montarHero() {
+  const h = CONFIG.hero || {};
+  const heroEl = document.querySelector(".hero");
+  if (heroEl && h.imagemFundo) {
+    heroEl.style.backgroundImage =
+      `linear-gradient(135deg, rgba(125,46,70,.86), rgba(200,30,110,.66)), url("${h.imagemFundo}")`;
+  }
+  setText("[data-hero-botao-principal]", h.botaoPrincipal);
+  setText("[data-hero-botao-secundario]", h.botaoSecundario);
+}
+
+/* ---------- Seção "Sobre" (texto + imagem + pilares) ---------- */
+function montarSobre() {
+  const sb = CONFIG.sobre || {};
+  const img = document.querySelector("[data-sobre-img]");
+  if (img) {
+    if (sb.imagem) {
+      img.src = sb.imagem;
+      if (sb.imagemAlt) img.alt = sb.imagemAlt;
+    } else {
+      // sem imagem configurada: remove o <img> para não exibir broken image
+      img.remove();
+    }
+  }
+  const texto = document.querySelector("[data-sobre-texto]");
+  if (texto && Array.isArray(sb.paragrafos)) {
+    texto.innerHTML = sb.paragrafos.map(p => `<p>${p}</p>`).join("");
+  }
+  const pilaresBox = document.querySelector("[data-pilares]");
+  if (pilaresBox && Array.isArray(sb.pilares)) {
+    pilaresBox.innerHTML = sb.pilares.map(p => `
+      <div class="pilar"><div class="ico">${p.icone || ""}</div><h3>${p.titulo || ""}</h3><p>${p.texto || ""}</p></div>
+    `).join("");
+  }
+}
+
+/* ---------- Textos das seções (títulos / subtítulos / CTAs) ---------- */
+function montarTextosSecoes() {
+  const s = CONFIG.secoes || {};
+  const g = CONFIG.gatilhos || {};
+  const par = (chave, dataAttr) => {
+    const dados = s[chave] || {};
+    if (dados.titulo)    setText(`[data-${dataAttr}-titulo]`, dados.titulo);
+    if (dados.subtitulo) setText(`[data-${dataAttr}-subtitulo]`, dados.subtitulo);
+  };
+  par("carrossel",    "sec-carrossel");
+  par("sobre",        "sec-sobre");
+  par("idealizadora", "sec-ideal");
+  par("programacao",  "sec-prog");
+  par("depoimentos",  "sec-dep");
+  par("contato",      "sec-contato");
+
+  // CTA inscrição
+  const cta = s.ctaInscricao || {};
+  setText("[data-cta-inscricao-titulo]", cta.titulo);
+  const textoCta = cta.texto || g.chamadaFinal || "";
+  setText("[data-chamada-final]", textoCta);
+  setText("[data-cta-inscricao-botao]", cta.botao);
+
+  // Ofertas / PIX
+  const of = s.ofertas || {};
+  setText("[data-ofertas-titulo]", of.titulo);
+  setText("[data-ofertas-subtitulo]", of.subtitulo);
+  setText("[data-ofertas-texto]", of.texto);
+  const botaoPix = document.getElementById("copiarPix");
+  if (botaoPix && of.botao) botaoPix.textContent = of.botao;
+
+  // Realização (eyebrow)
+  const re = s.realizacao || {};
+  setText("[data-realizacao-eyebrow]", re.eyebrow);
+}
+
+/* ---------- Páginas internas (galeria + inscrição) ---------- */
+function montarPaginasInternas() {
+  const p = (CONFIG.paginas || {});
+  const gal = p.galeria || {};
+  setText("[data-pagina-galeria-titulo]", gal.titulo);
+  setText("[data-pagina-galeria-subtitulo]", gal.subtitulo);
+
+  const ins = p.inscricao || {};
+  setText("[data-pagina-insc-titulo]", ins.titulo);
+  setText("[data-pagina-insc-subtitulo]", ins.heroSubtitulo);
+  setText("[data-pagina-insc-passos-titulo]", ins.passosTitulo);
+  const passosBox = document.querySelector("[data-pagina-insc-passos]");
+  if (passosBox && Array.isArray(ins.passos)) {
+    passosBox.innerHTML = ins.passos.map((t, i) =>
+      `<li><span class="passo-num">${i + 1}</span> ${t}</li>`).join("");
+  }
+  setText("[data-pagina-insc-wa-titulo]", ins.whatsappTitulo);
+  setText("[data-pagina-insc-wa-botao]",  ins.whatsappBotao);
+  setText("[data-pagina-insc-voltar]",    ins.voltar);
 }
 
 function formatarData(iso) {
@@ -112,6 +215,13 @@ function iniciarContagem() {
   const box = document.getElementById("countdown");
   if (!box || isNaN(alvo)) return;
 
+  const cd = ((CONFIG.gatilhos || {}).contagem) || {};
+  const txtEHoje              = cd.eHoje              || "É hoje! 👑 Te esperamos.";
+  const txtUrgHoje            = cd.urgenciaHoje       || "✨ É hoje! Te esperamos!";
+  const txtUrgUltimasHoras    = cd.urgenciaUltimasHoras || "🔥 É hoje! Últimas horas para se inscrever!";
+  const txtUrgFalta1Dia       = cd.urgenciaFalta1Dia  || "🔥 Falta só 1 dia! Garanta sua vaga!";
+  const txtUrgFaltamDiasTpl   = cd.urgenciaFaltamDias || "⏳ Faltam {dias} dias — não deixe para a última hora!";
+
   const urg = document.querySelector("[data-urgencia]");
   const tick = () => {
     const agora = Date.now();
@@ -122,12 +232,12 @@ function iniciarContagem() {
     const seg = Math.floor(dif / 1e3);
     box.innerHTML =
       cell(dias, "dias") + cell(hrs, "horas") + cell(min, "min") + cell(seg, "seg");
-    if (alvo - agora <= 0) box.innerHTML = '<p class="cd-fim">É hoje! 👑 Te esperamos.</p>';
+    if (alvo - agora <= 0) box.innerHTML = `<p class="cd-fim">${txtEHoje}</p>`;
     if (urg) {
-      if (alvo - agora <= 0) urg.textContent = "✨ É hoje! Te esperamos!";
-      else if (dias === 0) urg.textContent = "🔥 É hoje! Últimas horas para se inscrever!";
-      else if (dias === 1) urg.textContent = "🔥 Falta só 1 dia! Garanta sua vaga!";
-      else urg.textContent = `⏳ Faltam ${dias} dias — não deixe para a última hora!`;
+      if (alvo - agora <= 0)     urg.textContent = txtUrgHoje;
+      else if (dias === 0)       urg.textContent = txtUrgUltimasHoras;
+      else if (dias === 1)       urg.textContent = txtUrgFalta1Dia;
+      else                       urg.textContent = txtUrgFaltamDiasTpl.replace("{dias}", dias);
     }
   };
   const cell = (n, l) =>
@@ -150,6 +260,19 @@ function montarBotoesContato() {
     if (email) { a.href = "mailto:" + email; a.textContent = email; }
     else a.closest("[data-email-wrap]")?.remove();
   });
+
+  // Textos dos cartões de contato (títulos e legendas)
+  const cards = (CONFIG.contato && CONFIG.contato.cards) || {};
+  const aplicaCard = (chave, selT, selL) => {
+    const c = cards[chave] || {};
+    if (c.titulo)  setText(selT, c.titulo);
+    if (c.legenda) setText(selL, c.legenda);
+  };
+  aplicaCard("whatsapp",  "[data-card-wa-titulo]",    "[data-card-wa-legenda]");
+  aplicaCard("instagram", "[data-card-ig-titulo]",    "[data-card-ig-legenda]");
+  aplicaCard("facebook",  "[data-card-fb-titulo]",    "[data-card-fb-legenda]");
+  aplicaCard("email",     "[data-card-email-titulo]", "[data-card-email-legenda]");
+
   // botão flutuante
   const float = document.getElementById("whatsFloat");
   if (float && whatsapp) {
@@ -183,12 +306,22 @@ function montarVagas() {
 
   const restam = Math.max(0, total - preenchidas);
   const pct = Math.round((preenchidas / total) * 100);
+  setText("[data-vagas-selo]", v.selo);
   setText("[data-vagas-titulo]", v.titulo);
   setText("[data-vagas-subtitulo]", v.subtitulo);
-  setText("[data-vagas-preenchidas]", preenchidas);
-  setText("[data-vagas-total]", total);
-  setText("[data-vagas-restam]", restam);
   setText("[data-vagas-pct]", pct + "%");
+  if (v.botaoTexto) setText("[data-vagas-botao]", v.botaoTexto);
+
+  // Texto informativo (renderizado pelo template para permitir destaque)
+  const infoBox = document.querySelector("[data-vagas-info]");
+  if (infoBox) {
+    const tpl = v.infoTemplate || "{preenchidas} de {total} vagas preenchidas — restam apenas {restam}!";
+    const escape = (s) => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    infoBox.innerHTML = escape(tpl)
+      .replace("{preenchidas}", `<strong>${preenchidas}</strong>`)
+      .replace("{total}",       `<strong>${total}</strong>`)
+      .replace("{restam}",      `<strong class="vagas-restam">${restam}</strong>`);
+  }
 
   const barra = document.getElementById("vagas-barra");
   if (barra) {
@@ -221,6 +354,7 @@ function montarIgreja() {
   if (ig.mostrar === false || !ig.nome) { sec.remove(); return; }
   setText("[data-igreja-nome]", ig.nome);
   setText("[data-igreja-desc]", ig.descricao);
+  setText("[data-igreja-icone]", ig.icone);
   const liga = (sel, url) => {
     const a = sec.querySelector(sel);
     if (!a) return;
@@ -279,6 +413,7 @@ function montarIngresso() {
 
   setText("[data-ingresso-titulo]", ing.titulo);
   setText("[data-ingresso-subtitulo]", ing.subtitulo);
+  setText("[data-preco-label]", ing.precoLabel);
   setText("[data-preco]", ing.preco);
   setText("[data-preco-obs]", ing.precoObs);
   if (ing.botaoTexto) {
@@ -295,12 +430,17 @@ function montarLocal() {
   if (!card) return;
   const local = CONFIG.local || {};
   if (!local.nome && !local.endereco && !local.mapsUrl) { card.remove(); return; }
+  setText("[data-local-titulo]", local.tituloCard);
   setText("[data-local-nome]", local.nome);
   setText("[data-local-endereco]", local.endereco);
   const btn = document.getElementById("localMaps");
   if (btn) {
-    if (local.mapsUrl) btn.href = local.mapsUrl;
-    else btn.remove();
+    if (local.mapsUrl) {
+      btn.href = local.mapsUrl;
+      if (local.botaoMaps) btn.textContent = local.botaoMaps;
+    } else {
+      btn.remove();
+    }
   }
 }
 
@@ -342,8 +482,11 @@ function montarPagamento() {
 
   setText("[data-pagamento-titulo]", pg.titulo);
   setText("[data-pagamento-subtitulo]", pg.subtitulo);
+  setText("[data-pagamento-label]", pg.label);
+  setText("[data-pagamento-formas-titulo]", pg.formasTitulo);
   setText("[data-pagamento-parcelas]", resumo);
   setText("[data-pagamento-obs]", pg.observacao);
+  if (pg.botaoTexto) setText("[data-pagamento-botao]", pg.botaoTexto);
 
   // Resumo curto no card de preço (seção Investimento)
   document.querySelectorAll("[data-parcelas-resumo]").forEach(el => {
@@ -365,12 +508,15 @@ function montarPix() {
   setText("[data-pix-nome]", pixNome);
   setText("[data-pix-tipo]", pixTipo);
   const btn = document.getElementById("copiarPix");
-  if (btn) btn.addEventListener("click", () => {
-    navigator.clipboard.writeText(pixChave).then(() => {
-      btn.textContent = "✓ Chave copiada!";
-      setTimeout(() => (btn.textContent = "Copiar chave PIX"), 2500);
+  if (btn) {
+    const textoOriginal = btn.textContent;
+    btn.addEventListener("click", () => {
+      navigator.clipboard.writeText(pixChave).then(() => {
+        btn.textContent = "✓ Chave copiada!";
+        setTimeout(() => (btn.textContent = textoOriginal), 2500);
+      });
     });
-  });
+  }
 }
 
 /* ---------- Inscrição ---------- */
@@ -378,6 +524,11 @@ function montarInscricao() {
   const url = CONFIG.inscricao.googleFormUrl;
   const frameWrap = document.getElementById("formWrap");
   const naPaginaDoForm = !!frameWrap; // estamos em inscricao.html
+  const msgInsc = (CONFIG.gatilhos && CONFIG.gatilhos.mensagemInscricaoWhatsapp)
+    || "Quero me inscrever no Princesas Adornadas!";
+  const fallback = CONFIG.contato.whatsapp
+    ? `https://wa.me/${CONFIG.contato.whatsapp}?text=${encodeURIComponent(msgInsc)}`
+    : CONFIG.evento.instagram;
 
   // Botões "Garantir minha vaga" / "Quero participar" sempre levam para a
   // página interna da inscrição (que já tem o formulário embutido), em vez
@@ -394,9 +545,7 @@ function montarInscricao() {
       a.removeAttribute("rel");
     } else {
       // Sem formulário configurado: cai pro WhatsApp/Instagram como antes.
-      a.href = CONFIG.contato.whatsapp
-        ? `https://wa.me/${CONFIG.contato.whatsapp}?text=${encodeURIComponent("Quero me inscrever no Princesas Adornadas!")}`
-        : CONFIG.evento.instagram;
+      a.href = fallback;
       a.setAttribute("target", "_blank");
       a.setAttribute("rel", "noopener");
     }
@@ -404,12 +553,13 @@ function montarInscricao() {
 
   if (frameWrap && url && CONFIG.inscricao.incorporar) {
     const embed = url.includes("?") ? url + "&embedded=true" : url + "?embedded=true";
-    frameWrap.innerHTML = `<iframe src="${embed}" title="Inscrição" loading="lazy">Carregando…</iframe>`;
+    const altura = Number(CONFIG.inscricao.alturaIframe) || 1400;
+    frameWrap.innerHTML =
+      `<iframe src="${embed}" title="Inscrição" loading="lazy" style="min-height:${altura}px">Carregando…</iframe>`;
   } else if (frameWrap && !url) {
     frameWrap.innerHTML =
       `<div class="form-placeholder"><p>As inscrições serão divulgadas em breve.</p>
-       <a class="btn btn-ouro" data-inscricao-link>Falar conosco</a></div>`;
-    montarInscricao(); // re-aplica o link no botão recém-criado
+       <a class="btn btn-ouro" href="${fallback}" target="_blank" rel="noopener">Falar conosco</a></div>`;
   }
 }
 
