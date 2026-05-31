@@ -187,9 +187,9 @@ const CONFIG = {
   ------------------------------------------------------------------ */
   proximoEvento: {
     titulo: "Próximo Encontro",
-    data: "2026-09-12T09:00:00",
-    local: "A definir",
-    cidade: "",
+    data: "2026-08-28T12:00:00",
+    local: "Hotel Lagoa quente",
+    cidade: "Caldas Novas-GO",
   },
 
   /* ------------------------------------------------------------------
@@ -256,10 +256,10 @@ const CONFIG = {
     mostrar: true,
     titulo: "Investimento",
     subtitulo: "Tudo o que você recebe nesse dia especial",
-    preco: "R$ 120,00",
+    preco: "R$ 1.200,00",
     precoLabel: "Valor do ingresso",
     precoObs: "por pessoa",
-    parcelas: "ou em até 3x sem juros",   // deixe "" se não houver
+    parcelas: "ou em até 10x sem juros",   // deixe "" se não houver
     incluso: [
       "Credenciamento e kit da participante",
       "Coffee break da manhã",
@@ -287,7 +287,7 @@ const CONFIG = {
     maxParcelas: 10,          // máximo de parcelas sem juros
     semJuros: true,
     // Valor total para o cálculo. Vazio = usa o preço do ingresso (acima).
-    valorTotal: "",           // ex.: "1200" ou "R$ 1.200,00"
+    valorTotal: "1.200,00",           // ex.: "1200" ou "R$ 1.200,00"
     observacao: "O número de parcelas sem juros diminui conforme a data do evento se aproxima. Garanta já a sua e parcele em mais vezes!",
     formas: ["PIX", "Cartão de crédito", "Cartão de débito", "Dinheiro"],
   },
@@ -313,7 +313,7 @@ const CONFIG = {
     mostrar: true,
     itens: [
       { numero: "+300", label: "Mulheres impactadas" },
-      { numero: "5", label: "Edições realizadas" },
+      { numero: "15", label: "Edições realizadas" },
       { numero: "100%", label: "Dias de bênção" },
     ],
   },
@@ -347,7 +347,7 @@ const CONFIG = {
   vagas: {
     mostrar: true,
     total: 200,
-    preenchidas: 150,
+    preenchidas: 170,
     selo: "🔥 Atenção",
     titulo: "Corra, as vagas estão acabando!",
     subtitulo: "Garanta a sua antes que esgote",
